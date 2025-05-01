@@ -1,41 +1,43 @@
-def largest_cross(grid):
-    n = len(grid)
+def cruz_mas_grande(matriz):
+    n = len(matriz)
     if n == 0:
         return 0
 
-    left = [[0]*n for _ in range(n)]
-    right = [[0]*n for _ in range(n)]
-    top = [[0]*n for _ in range(n)]
-    bottom = [[0]*n for _ in range(n)]
+    izquierda = [[0] * n for _ in range(n)]
+    derecha = [[0] * n for _ in range(n)]
+    arriba = [[0] * n for _ in range(n)]
+    abajo = [[0] * n for _ in range(n)]
 
-    # Primera pasada: llenar left y top
-    for i in range(n):
-        for j in range(n):
-            if grid[i][j] == 1:
-                left[i][j] = (left[i][j-1] if j > 0 else 0) + 1
-                top[i][j] = (top[i-1][j] if i > 0 else 0) + 1
+    # Primera pasada: calcular izquierda y arriba
+    for fila in range(n):
+        for columna in range(n):
+            if matriz[fila][columna] == 1:
+                izquierda[fila][columna] = (izquierda[fila][columna - 1] if columna > 0 else 0) + 1
+                arriba[fila][columna] = (arriba[fila - 1][columna] if fila > 0 else 0) + 1
 
-    # Segunda pasada: llenar right y bottom
-    for i in range(n-1, -1, -1):
-        for j in range(n-1, -1, -1):
-            if grid[i][j] == 1:
-                right[i][j] = (right[i][j+1] if j < n-1 else 0) + 1
-                bottom[i][j] = (bottom[i+1][j] if i < n-1 else 0) + 1
+    # Segunda pasada: calcular derecha y abajo
+    for fila in range(n - 1, -1, -1):
+        for columna in range(n - 1, -1, -1):
+            if matriz[fila][columna] == 1:
+                derecha[fila][columna] = (derecha[fila][columna + 1] if columna < n - 1 else 0) + 1
+                abajo[fila][columna] = (abajo[fila + 1][columna] if fila < n - 1 else 0) + 1
 
-    max_cross = 0
-    for i in range(n):
-        for j in range(n):
-            if grid[i][j] == 1:
-                arm_length = min(left[i][j], right[i][j], top[i][j], bottom[i][j])
-                if arm_length > 0:
-                    size = 4 * (arm_length - 1) + 1
-                    max_cross = max(max_cross, size)
+    max_cruz = 0
+    # Verificar la cruz más grande posible en cada celda
+    for fila in range(n):
+        for columna in range(n):
+            if matriz[fila][columna] == 1:
+                brazo = min(izquierda[fila][columna], derecha[fila][columna],
+                            arriba[fila][columna], abajo[fila][columna])
+                if brazo > 0:
+                    tamaño = 4 * (brazo - 1) + 1
+                    max_cruz = max(max_cruz, tamaño)
 
-    return max_cross
+    return max_cruz
 
-# Ejecución:
+# Ejecución de ejemplo
 if __name__ == "__main__":
-    grid = [
+    matriz = [
         [1, 0, 1, 1, 1, 0, 1, 0, 1],
         [1, 1, 0, 1, 0, 1, 1, 1, 1],
         [1, 0, 1, 0, 0, 1, 0, 0, 1],
@@ -46,4 +48,5 @@ if __name__ == "__main__":
         [1, 1, 0, 1, 0, 1, 1, 1, 1],
         [1, 0, 1, 1, 1, 0, 1, 0, 1]
     ]
-    print(f"Tamaño de la cruz más grande: {largest_cross(grid)}")
+    resultado = cruz_mas_grande(matriz)
+    print(f"Tamaño de la cruz más grande: {resultado}")
